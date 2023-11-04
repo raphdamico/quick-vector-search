@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transformers.js - Object Detection demo</title>
+</head>
+
+<body>        
+    <!-- Input field -->
+    <input type="text" id="search" placeholder="Type something here..." value="1:1 with dario">
+    <br>
+    
+    <!-- Textarea field -->
+    <textarea id="eventList" rows="15" placeholder="The input text will appear here...">
+Clockwise AI Weekly Kickoff
+Scheduling in Chat + Calendar Weekly Kickoff
+❇️ Break (via Clockwise)  [hold]
+Prompt Engineering Weekly Kickoff   
+❇️ Lunch (via Clockwise) [lunch]
+❇️ Event Card Design Polish Chat 
+❇️ Design Weekly (Mondays) 
+❇️ Raphael // Dario [one_on_one]
+❇️ Break (via Clockwise) [hold]
+❇️ Focus Time (via Clockwise) [hold] [focus_time]
+❇️ Raphael // Krishnan [one_on_one]  
+❇️ Raph/Michael check-in [one_on_one]    
+MTFF: Raph / Vicky [one_on_one]
+❇️ AI Chat+Cal Refinement
+⏸ [Optional] AI Changelog
+❇️ AI Cross Functional Stand Up
+Product Metrics Review
+✨ Clockwise research session - Dominic West [external]
+Clockwise AI end-of-sprint check-in + Retro
+Weekly Demos
+✨ Clockwise research session - Benjamin Kitt [external]
+❇️ Break (via Clockwise) [hold]
+MTFF: Raph / Vicky [one_on_one]</textarea>
+    <br>
+    <!-- Button to trigger the JavaScript function -->
+    <button id="copyButton">Compare</button>
+    <div id="output"></div>
+    
+    <script type="module">
+        import "https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js";
+        import { compareSentences } from './index.mjs';
+        document.getElementById('copyButton').addEventListener('click', copyInputToTextarea);
+        
+        async function copyInputToTextarea() {
+            console.log("comparing!")
+            // Get the value from the input
+            let search = document.getElementById('search').value;
+            let eventList = document.getElementById('eventList').value.split("\n");
+            let scoredSentences = await compareSentences(search, eventList)
+
+            // sort the output of compare sentences by the score
+            scoredSentences = scoredSentences.sort(function(a, b) {
+                return b.score - a.score;
+            });
+
+            const colorScale = chroma.scale(['#fafa6e','#2A4858']).mode('lch')
+
+            const formattedOutput = scoredSentences.map((sentence) => {
+                return `<div class="scored-sentence">
+                    <span class="score" style="background-color: ${colorScale(sentence.score)}">${sentence.score.toFixed(2)}</span>
+                    <span class="sentence">${sentence.sentence}</span>
+                </div>`
+            }).join("")
+
+            document.getElementById('output').innerHTML = formattedOutput;
+
+        }
+    </script>
+</body>
+
+</html>
