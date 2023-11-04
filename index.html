@@ -46,10 +46,10 @@ MTFF: Raph / Vicky [one_on_one]</textarea>
     <script type="module">
         import "https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js";
         import { compareSentences } from './index.mjs';
-        document.getElementById('copyButton').addEventListener('click', copyInputToTextarea);
+        document.getElementById('copyButton').addEventListener('click', compare);
         
-        async function copyInputToTextarea() {
-            console.log("comparing!")
+        async function compare() {
+            const startTime = new Date().getTime();
             // Get the value from the input
             let search = document.getElementById('search').value;
             let eventList = document.getElementById('eventList').value.split("\n");
@@ -61,6 +61,8 @@ MTFF: Raph / Vicky [one_on_one]</textarea>
             });
 
             const colorScale = chroma.scale(['#fafa6e','#2A4858']).mode('lch')
+            const endTime = new Date().getTime();
+            const deltaTime = (endTime - startTime) / 1000;
 
             const formattedOutput = scoredSentences.map((sentence) => {
                 return `<div class="scored-sentence">
@@ -70,6 +72,7 @@ MTFF: Raph / Vicky [one_on_one]</textarea>
             }).join("")
 
             document.getElementById('output').innerHTML = formattedOutput;
+            document.getElementById('copyButton').innerHTML = `Compare (${deltaTime.toFixed(2)}s)`;
 
         }
     </script>
