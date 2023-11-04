@@ -2,7 +2,6 @@
 import { env, pipeline, cos_sim } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
 env.allowLocalModels = true;
 env.allowRemoteModels = true;
-env.useBrowserCache = true;
 
 async function loadModel() {
     // Ensure that 'sentence-transformers/all-MiniLM-L6-v2' is a valid model path for the transformers library you are using
